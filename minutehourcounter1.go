@@ -2,11 +2,6 @@ package main
 
 import "time"
 
-type Event struct {
-	count int
-	time  int64
-}
-
 type MinuteHourCounter1 struct {
 	events []Event
 }

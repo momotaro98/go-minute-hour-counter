@@ -19,9 +19,15 @@ type MinuteHourCounter interface {
 	HourCount() int
 }
 
+type Event struct {
+	count int
+	time  int64
+}
+
 func CounterFactory() MinuteHourCounter {
 	var c MinuteHourCounter
-	c = &MinuteHourCounter1{}
+	// c = &MinuteHourCounter1{}
+	c = &MinuteHourCounter2{}
 	return c
 }
 

@@ -35,10 +35,10 @@ func (c *MinuteHourCounter1) CountSince(cutoff int64) (count int) {
 
 // この実装ではパフォーマンスの問題がある。
 // 1. これからも大きくなっていく。
-// このクラスはすべてのイベントを保持している。つまり、メモリを無限に使
-// 用してしまうのだ！ MinuteHourCounterは、1時間よりも不要なイベント
-// を自動的に削除するべきだ
+//   このクラスはすべてのイベントを保持している。つまり、メモリを無限に使
+//   用してしまうのだ！ MinuteHourCounterは、1時間よりも不要なイベント
+//   を自動的に削除するべきだ
 // 2. MinuteCountとHourCountが遅すぎる。
-// CountSince()メソッドの処理時間はO(n)でありパフォーマンスが悪い。
-// MinuteHourCounterは、Add()の呼び出しに対する値をminute_countと
-// hour_countとで別々に保持するべきだ。
+//   CountSince()メソッドの処理時間はO(n)でありパフォーマンスが悪い。
+//   MinuteHourCounterは、Add()の呼び出しに対する値をminute_countと
+//   hour_countとで別々に保持するべきだ。

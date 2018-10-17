@@ -2,9 +2,14 @@ package main
 
 import "time"
 
+type Event2 struct {
+	count int
+	time  int64
+}
+
 type MinuteHourCounter2 struct {
-	minuteEvents []Event
-	hourEvents   []Event
+	minuteEvents []Event2
+	hourEvents   []Event2
 	minuteCount  int
 	hourCount    int
 }
@@ -14,7 +19,7 @@ func (c *MinuteHourCounter2) Add(count int) {
 	c.ShiftOldEvents(nowSecs)
 
 	// 1分間のリストに流し込む
-	c.minuteEvents = append(c.minuteEvents, Event{count, nowSecs})
+	c.minuteEvents = append(c.minuteEvents, Event2{count, nowSecs})
 
 	c.minuteCount += count
 	c.hourCount += count
@@ -49,3 +54,12 @@ func (c *MinuteHourCounter2) ShiftOldEvents(nowSecs int64) {
 		c.hourEvents = c.hourEvents[:len(c.hourEvents)-1]
 	}
 }
+
+// このCounterの欠点
+// 1点目: まず、この設計には柔軟性がない。例えば、直近24時間のカウントを保持したい
+// とする。すると、多くのコードに修正が必要になる。ShiftOldEvents()は、わずかに
+// 分と時間のデータのやり取りをしているだけの非常に密度の濃い関数である。
+// 2点目: 次に、メモリの使用量が多い。高トラフィックのサーバが1秒間に100回もAdd()
+// を呼び出したとしよう。直近1時間のデータをすべて保持しているので、約5MBのメモリが
+// 必要になる。Add()が呼び出される頻度に関係なく、MinuteHourCounterの使用する
+// メモリは一定であるほうが良い。

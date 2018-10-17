@@ -2,12 +2,17 @@ package main
 
 import "time"
 
+type Event1 struct {
+	count int
+	time  int64
+}
+
 type MinuteHourCounter1 struct {
-	events []Event
+	events []Event1
 }
 
 func (c *MinuteHourCounter1) Add(count int) {
-	c.events = append(c.events, Event{count, time.Now().Unix()})
+	c.events = append(c.events, Event1{count, time.Now().Unix()})
 }
 
 func (c *MinuteHourCounter1) MinuteCount() int {

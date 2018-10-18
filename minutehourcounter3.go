@@ -37,19 +37,42 @@ type TrailingBucketCounter interface {
 	TrailingCount(now int64) int
 }
 
-type RealTrailingBucketCounter struct{}
+type RealTrailingBucketCounter struct {
+	buckets         ConveyorQueue
+	secsPerBucket   int64
+	lastUpdatedTime int64
+}
 
 // NewTrailingBucketCounter3(30, 60)は、直近30分の時間バケツを追跡する。
 func NewRealTrailingBucketCounter(numBuckets int, secsPerBucket int) *RealTrailingBucketCounter {
-	return nil
+	b := NewRealConveyorQueue(numBuckets)
+	spb := int64(secsPerBucket)
+	now := time.Now().Unix()
+	return &RealTrailingBucketCounter{buckets: b, secsPerBucket: spb, lastUpdatedTime: now}
 }
 
-func (RealTrailingBucketCounter) Add(count int, now int64) {
-	panic("implement me")
+func (tbc *RealTrailingBucketCounter) Add(count int, now int64) {
+	tbc.update(now)
+	tbc.buckets.AddToBack(count)
 }
 
-func (RealTrailingBucketCounter) TrailingCount(now int64) int {
-	panic("implement me")
+func (tbc *RealTrailingBucketCounter) TrailingCount(now int64) int {
+	tbc.update(now)
+	return tbc.buckets.TotalSum()
+}
+
+func (tbc *RealTrailingBucketCounter) update(now int64) {
+	diffTime := now - tbc.lastUpdatedTime
+	numShift := diffTime / tbc.secsPerBucket
+
+	tbc.buckets.Shift(int(numShift))
+	tbc.lastUpdatedTime = now
+
+	// Send option
+	//currentBuckets := now / tbc.secsPerBucket
+	//lastUpdateBuckets := tbc.lastUpdatedTime / tbc.secsPerBucket
+	//tbc.buckets.Shift(int(currentBuckets - lastUpdateBuckets))
+	//tbc.lastUpdatedTime = now
 }
 
 // ConveyorQueue は上限数を持ったキュー。古いデータは端から落ちる。
@@ -64,4 +87,25 @@ type ConveyorQueue interface {
 
 	// TotalSum は現在のキューに含まれる項目の合計値を返す。
 	TotalSum() int
+}
+
+type RealConveyorQueue struct {
+	queue []int
+}
+
+func NewRealConveyorQueue(numQueue int) *RealConveyorQueue {
+	queue := make([]int, numQueue)
+	return &RealConveyorQueue{queue: queue}
+}
+
+func (q *RealConveyorQueue) AddToBack(count int) {
+	panic("implement me")
+}
+
+func (q *RealConveyorQueue) Shift(numShift int) {
+	panic("implement me")
+}
+
+func (q *RealConveyorQueue) TotalSum() int {
+	panic("implement me")
 }

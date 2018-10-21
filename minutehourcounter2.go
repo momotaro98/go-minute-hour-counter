@@ -14,6 +14,10 @@ type MinuteHourCounter2 struct {
 	hourCount    int
 }
 
+func NewMinuteHourCounter2() *MinuteHourCounter2 {
+	return &MinuteHourCounter2{}
+}
+
 func (c *MinuteHourCounter2) Add(count int) {
 	nowSecs := time.Now().Unix()
 	c.ShiftOldEvents(nowSecs)

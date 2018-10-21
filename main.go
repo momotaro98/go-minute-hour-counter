@@ -21,8 +21,9 @@ type MinuteHourCounter interface {
 
 func CounterFactory() MinuteHourCounter {
 	var c MinuteHourCounter
-	// c = &MinuteHourCounter1{}
-	c = &MinuteHourCounter2{}
+	//c = NewMinuteHourCounter1()
+	//c = NewMinuteHourCounter2()
+	c = NewMinuteHourCounter3()
 	return c
 }
 

@@ -11,6 +11,10 @@ type MinuteHourCounter1 struct {
 	events []Event1
 }
 
+func NewMinuteHourCounter1() *MinuteHourCounter1 {
+	return &MinuteHourCounter1{}
+}
+
 func (c *MinuteHourCounter1) Add(count int) {
 	c.events = append(c.events, Event1{count, time.Now().Unix()})
 }

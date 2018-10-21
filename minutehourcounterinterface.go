@@ -1,8 +1,6 @@
-package main
+package minutehourcounter
 
-import (
-	"fmt"
-)
+import "github.com/pkg/errors"
 
 // MinuteHourCounter は直近1分間および直近1時間の累積カウントを記録する。
 // 例えば、帯域幅の使用状況を確認するのに使える。
@@ -19,21 +17,14 @@ type MinuteHourCounter interface {
 	HourCount() int
 }
 
-func CounterFactory() MinuteHourCounter {
-	var c MinuteHourCounter
-	//c = NewMinuteHourCounter1()
-	//c = NewMinuteHourCounter2()
-	c = NewMinuteHourCounter3()
-	return c
-}
-
-func main() {
-	fmt.Println("vim-go")
-
-	counter := CounterFactory()
-	for i := 0; i < 10; i++ {
-		counter.Add(1)
+func CounterFactory(whichNumberCounter int) (MinuteHourCounter, error) {
+	switch whichNumberCounter {
+	case 1:
+		return NewMinuteHourCounter1(), nil
+	case 2:
+		return NewMinuteHourCounter2(), nil
+	case 3:
+		return NewMinuteHourCounter3(), nil
 	}
-	fmt.Println(counter.MinuteCount())
-	fmt.Println(counter.HourCount())
+	return nil, errors.Errorf("Invalid number: %d", whichNumberCounter)
 }

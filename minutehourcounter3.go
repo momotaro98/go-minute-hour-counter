@@ -90,22 +90,42 @@ type ConveyorQueue interface {
 }
 
 type RealConveyorQueue struct {
-	queue []int
+	queue    []int
+	maxItems int
+	// totalSum int // TODO: ConveyorQueueにて totalSumを持つ場合(毎回Updateする)とそうでない場合(Forで回して合計を計算する)ではパフォーマンスにどれほど差がでるか
 }
 
 func NewRealConveyorQueue(numQueue int) *RealConveyorQueue {
 	queue := make([]int, numQueue)
-	return &RealConveyorQueue{queue: queue}
+	return &RealConveyorQueue{queue: queue, maxItems: numQueue}
 }
 
-func (q *RealConveyorQueue) AddToBack(count int) {
-	panic("implement me")
+func (qc *RealConveyorQueue) AddToBack(count int) {
+	if len(qc.queue) < 1 {
+		qc.queue = []int{0}
+	}
+	qc.queue[len(qc.queue)-1] += count
 }
 
-func (q *RealConveyorQueue) Shift(numShift int) {
-	panic("implement me")
+func (qc *RealConveyorQueue) Shift(numShift int) {
+	// numShiftがQueueの上限数より大きいときQueueを初期化する
+	if numShift >= qc.maxItems {
+		qc.queue = make([]int, len(qc.queue))
+		return
+	}
+
+	// numShift分Queueの要素を減らした後、maxItems分を0の要素で埋める
+	for i := 0; i < numShift; i++ {
+		qc.queue = qc.queue[1:] // Queue.Pop()
+	}
+	for len(qc.queue) < qc.maxItems {
+		qc.queue = append(qc.queue, 0)
+	}
 }
 
-func (q *RealConveyorQueue) TotalSum() int {
-	panic("implement me")
+func (qc RealConveyorQueue) TotalSum() (sum int) {
+	for _, val := range qc.queue {
+		sum += val
+	}
+	return sum
 }

@@ -111,6 +111,7 @@ func initial3RealConveyorQueueWith1_2_3() *RealConveyorQueue {
 	for i, val := range []int{val1, val2, val3} {
 		sum += val
 		rcq.queue[i] += val
+		rcq.totalSum += val
 	}
 	return rcq
 }

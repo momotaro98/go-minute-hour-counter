@@ -67,12 +67,6 @@ func (tbc *RealTrailingBucketCounter) update(now int64) {
 
 	tbc.buckets.Shift(int(numShift))
 	tbc.lastUpdatedTime = now
-
-	// Send option
-	//currentBuckets := now / tbc.secsPerBucket
-	//lastUpdateBuckets := tbc.lastUpdatedTime / tbc.secsPerBucket
-	//tbc.buckets.Shift(int(currentBuckets - lastUpdateBuckets))
-	//tbc.lastUpdatedTime = now
 }
 
 // ConveyorQueue は上限数を持ったキュー。古いデータは端から落ちる。

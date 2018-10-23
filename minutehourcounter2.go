@@ -49,13 +49,13 @@ func (c *MinuteHourCounter2) ShiftOldEvents(nowSecs int64) {
 		c.hourEvents = append(c.hourEvents, c.minuteEvents[0])
 
 		c.minuteCount -= c.minuteEvents[0].count
-		c.minuteEvents = c.minuteEvents[:len(c.minuteEvents)-1]
+		c.minuteEvents = c.minuteEvents[1:]
 	}
 
 	// 1時間以上経過した古いイベントを'hour_events'から削除する
 	for len(c.hourEvents) > 0 && c.hourEvents[0].time <= hourAgo {
 		c.hourCount -= c.hourEvents[0].count
-		c.hourEvents = c.hourEvents[:len(c.hourEvents)-1]
+		c.hourEvents = c.hourEvents[1:]
 	}
 }
 
